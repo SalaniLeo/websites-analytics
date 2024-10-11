@@ -1,0 +1,5 @@
+venv
+database.ini
+key_generator.py
+.env
+__pycache__
