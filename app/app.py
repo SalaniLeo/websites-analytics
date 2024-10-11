@@ -8,13 +8,15 @@ from cryptography.fernet import Fernet
 import ipinfo
 from key import *
 import time
-
 from pprint import pprint
+from pathlib import Path
+env_path = Path('endpoints.env')
+
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 CORS(app)
 config = load_config()
-load_dotenv()
 handler = ipinfo.getHandler(os.getenv('IPINFO_TOKEN'))
 
 valid_key = os.environ.get("API_KEY_UNCRYPTED")
@@ -31,7 +33,7 @@ def before_request_func():
     if request.path in PROTECTED_ENDPOINTS:
         return verify_api_key()
 
-@app.route('/api/user/entered', methods=['POST'])
+@app.route(os.environ.get('ENTERED_URL'), methods=['POST'])
 def user_entered():
     data = request.json
     response = Database.check_if_exist(data.get('ip'))
